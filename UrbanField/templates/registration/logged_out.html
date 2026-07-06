@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block contenido %}
+  <div style="text-align:center;padding:3rem;">
+    <h2>Sesión cerrada</h2>
+    <p>Has cerrado sesión correctamente.</p>
+    <a href="{% url 'login' %}" style="background:#1a1a2e;color:white;padding:0.6rem 1.5rem;border-radius:4px;text-decoration:none;">Volver a iniciar sesión</a>
+    <br><br>
+    <a href="{% url 'gestion:lista_eventos' %}" style="color:#555;">Ver eventos</a>
+  </div>
+{% endblock %}

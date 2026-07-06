@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block contenido %}
+  <h2>Próximos Partidos</h2>
+
+  <form method="get" style="margin-bottom:1.5rem;">
+    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Buscar por título o sede..." style="padding:0.5rem;width:280px;">
+    <button type="submit" style="padding:0.5rem 1rem;">Buscar</button>
+    {% if query %}<a href="{% url 'gestion:lista_eventos' %}" style="margin-left:0.5rem;">✕ Limpiar</a>{% endif %}
+  </form>
+
+  {% if query %}
+    <p><em>Resultados para "{{ query }}":</em></p>
+  {% endif %}
+
+  {% if eventos %}
+    <ul style="padding:0;list-style:none;">
+      {% for evento in eventos %}
+        <li style="background:white;border-radius:8px;padding:1rem 1.5rem;margin-bottom:0.8rem;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+          <strong><a href="{% url 'gestion:detalle_evento' evento.slug %}" style="color:#1a1a2e;text-decoration:none;">{{ evento.titulo }}</a></strong>
+          <span style="color:#888;font-size:0.9rem;margin-left:1rem;">{{ evento.fecha_hora|date:"d/m/Y H:i" }}</span>
+          <span style="color:#888;font-size:0.9rem;margin-left:1rem;">📍 {{ evento.instalacion.sede.nombre }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay eventos programados{% if query %} para "{{ query }}"{% endif %}.</p>
+  {% endif %}
+{% endblock %}

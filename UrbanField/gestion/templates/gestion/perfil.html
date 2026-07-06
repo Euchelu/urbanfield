@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block contenido %}
+  <h2>Mi Perfil</h2>
+  <div style="background:white;border-radius:8px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.08);max-width:500px;">
+    <p><strong>Usuario:</strong> {{ perfil.usuario.username }}</p>
+    <p><strong>Nombre:</strong> {{ perfil.usuario.get_full_name|default:"—" }}</p>
+    <p><strong>Email:</strong> {{ perfil.usuario.email|default:"—" }}</p>
+    <p><strong>Nivel:</strong> {{ perfil.nivel }}</p>
+    <p><strong>Bio:</strong></p>
+    <p>{{ perfil.bio|default:"Sin bio todavía." }}</p>
+    <hr style="margin:1rem 0;">
+    <a href="{% url 'gestion:editar_perfil' %}" style="background:#1a1a2e;color:white;padding:0.6rem 1.5rem;border-radius:4px;text-decoration:none;">✏️ Editar perfil</a>
+  </div>
+{% endblock %}

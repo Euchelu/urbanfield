@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block contenido %}
+  <h2>{{ evento.titulo }}</h2>
+
+  <div style="background:white;border-radius:8px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:1rem;">
+    <p><strong>📍 Sede:</strong> {{ evento.instalacion.sede.nombre }} — {{ evento.instalacion.nombre_pista }}</p>
+    <p><strong>👤 Organizador:</strong> {{ evento.organizador.username }}</p>
+    <p><strong>🗓 Fecha y hora:</strong> {{ evento.fecha_hora|date:"d/m/Y \a \l\a\s H:i" }}</p>
+    <p><strong>👥 Máx. participantes:</strong> {{ evento.max_participantes }}</p>
+    <p><strong>🌤 Clima esperado (API Open-Meteo):</strong>
+      {% if clima %}{{ clima }}{% else %}No disponible{% endif %}
+    </p>
+  </div>
+
+  <a href="{% url 'gestion:lista_eventos' %}" style="color:#555;">← Volver al listado</a>
+
+  {% if request.user == evento.organizador %}
+    <hr style="margin:1.5rem 0;">
+    <p>
+      <a href="{% url 'gestion:editar_evento' evento.slug %}" style="background:#f0ad4e;color:white;padding:0.5rem 1rem;border-radius:4px;text-decoration:none;margin-right:0.5rem;">✏️ Editar evento</a>
+      <a href="{% url 'gestion:borrar_evento' evento.slug %}" style="background:#d9534f;color:white;padding:0.5rem 1rem;border-radius:4px;text-decoration:none;">🗑️ Borrar evento</a>
+    </p>
+  {% endif %}
+{% endblock %}

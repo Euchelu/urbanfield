@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanField</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background: #f5f5f5; }
+        header { background: #1a1a2e; color: white; padding: 0.8rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        header h1 a { color: #e94560; text-decoration: none; font-size: 1.4rem; }
+        nav a, nav button { color: #ccc; text-decoration: none; margin-left: 1rem; background: none; border: none; cursor: pointer; font-size: 0.95rem; }
+        nav a:hover, nav button:hover { color: white; }
+        nav form { display: inline; }
+        .messages { padding: 0.5rem 2rem; }
+        .messages li { list-style: none; padding: 0.5rem 1rem; border-radius: 4px; margin: 0.3rem 0; background: #d4edda; color: #155724; }
+        main { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+        footer { text-align: center; padding: 2rem; color: #888; font-size: 0.85rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'gestion:lista_eventos' %}">⚽ UrbanField</a></h1>
+        <nav>
+            {% if request.user.is_authenticated %}
+                <span style="color:#aaa;">Hola, {{ request.user.username }}</span>
+                <a href="{% url 'gestion:crear_evento' %}">+ Crear Evento</a>
+                <a href="{% url 'gestion:ver_perfil' %}">Mi Perfil</a>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Salir</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Iniciar Sesión</a>
+                <a href="{% url 'gestion:registro' %}">Registrarse</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <main>
+        {% block contenido %}{% endblock %}
+    </main>
+
+    <footer>UrbanField &copy; 2026 — Integración de Tecnologías UPO</footer>
+</body>
+</html>
