@@ -32,8 +32,18 @@ class Evento(models.Model):
     def save(self, *args, **kwargs):
         # Si el slug está vacío, lo generamos a partir del título
         if not self.slug:
-            self.slug = slugify(self.titulo)
+            self.slug = self._generar_slug_unico()
         super().save(*args, **kwargs)
+
+    def _generar_slug_unico(self):
+        """Genera un slug único: si ya existe 'partido-padel', usa 'partido-padel-2', '-3'..."""
+        base = slugify(self.titulo) or 'evento'
+        slug = base
+        contador = 2
+        while Evento.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+            slug = f"{base}-{contador}"
+            contador += 1
+        return slug
 
     def __str__(self):
         return self.titulo
