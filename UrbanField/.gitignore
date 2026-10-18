@@ -8,3 +8,5 @@ staticfiles/
 .idea/
 *.sqlite3
 backup_urbanfield.json
+.coverage
+htmlcov/

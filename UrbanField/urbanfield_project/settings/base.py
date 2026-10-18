@@ -64,6 +64,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = 'login'  # Las URLs de autenticación están en /cuenta/, no en /accounts/
 LOGIN_REDIRECT_URL = 'gestion:lista_eventos'
 LOGOUT_REDIRECT_URL = 'gestion:lista_eventos'
 # Django REST Framework (EPD 07)
