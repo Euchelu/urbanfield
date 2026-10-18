@@ -2,7 +2,8 @@ import os
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS = ['*']
+# Lista de dominios separados por comas en la variable ALLOWED_HOSTS (p. ej. "urbanfield.es,www.urbanfield.es")
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost').split(',') if h.strip()]
 
 DATABASES = {
     'default': {
