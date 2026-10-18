@@ -49,24 +49,34 @@ def lista_eventos(request):
     return render(request, 'gestion/lista_eventos.html', {'eventos': eventos, 'query': query})
 
 
+OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+CLIMA_NO_DISPONIBLE = "No disponible"
+
+
+def obtener_clima(latitud, longitud):
+    """Devuelve la temperatura actual en la ubicación indicada usando Open-Meteo.
+
+    Si la API falla, tarda más de 5 s o responde con un formato inesperado,
+    devuelve "No disponible" para que la página de detalle nunca se rompa.
+    """
+    try:
+        respuesta = requests.get(
+            OPEN_METEO_URL,
+            params={'latitude': latitud, 'longitude': longitud, 'current_weather': 'true'},
+            timeout=5,
+        )
+        respuesta.raise_for_status()
+        temperatura = respuesta.json()['current_weather']['temperature']
+        return f"{temperatura} °C"
+    except (requests.RequestException, KeyError, TypeError, ValueError):
+        return CLIMA_NO_DISPONIBLE
+
+
 def detalle_evento(request, evento_slug):
     """Detalle de evento con consumo de API Open-Meteo (EPD 08)."""
     evento = get_object_or_404(Evento, slug=evento_slug, activo=True)
-    clima = None
-    try:
-        lat = evento.instalacion.sede.latitud
-        lon = evento.instalacion.sede.longitud
-        url = (
-            f"https://api.open-meteo.com/v1/forecast"
-            f"?latitude={lat}&longitude={lon}&current_weather=true"
-        )
-        respuesta = requests.get(url, timeout=5)
-        if respuesta.status_code == 200:
-            datos = respuesta.json()
-            temperatura = datos['current_weather']['temperature']
-            clima = f"{temperatura} \u00b0C"   # °C
-    except Exception:
-        clima = "No disponible"
+    sede = evento.instalacion.sede
+    clima = obtener_clima(sede.latitud, sede.longitud)
     return render(request, 'gestion/detalle_evento.html', {'evento': evento, 'clima': clima})
 
 
